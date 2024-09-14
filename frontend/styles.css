@@ -1,0 +1,77 @@
+/* General Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+    background-color: #14102A; /* Dark background color */
+    color: #cad2d5; /* Use grey for all text */
+}
+
+#lightbulbs-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.lightbulb {
+    display: inline-block;
+    text-align: center;
+    margin: 10px;
+    position: relative;
+    width: 80px;
+}
+
+.lightbulb p {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #cad2d5; /* Grey color for text */
+}
+
+/* Base part of the lightbulb */
+.lightbulb-base {
+    width: 30px;
+    height: 20px;
+    background-color: #cad2d5; /* Grey color for the base */
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+/* Glass part of the lightbulb */
+.lightbulb-glass {
+    width: 60px;
+    height: 80px;
+    background-color: #cad2d5; /* Grey color for the glass when off */
+    margin: 0 auto;
+    border-radius: 50% 50% 45% 45%;
+    position: relative;
+    top: -10px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Glow effect when the bulb is on */
+.lightbulb-glow {
+    width: 60px;
+    height: 80px;
+    background-color: #f1ec40; /* Yellowish light color when on */
+    border-radius: 50% 50% 45% 45%;
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: -1;
+}
+
+/* When the lightbulb is on, show the glow */
+.lightbulb.on .lightbulb-glow {
+    opacity: 0.7;  /* Adjust brightness of the glow */
+}
+
+/* Style for the lightbulb "glass" when it's turned on */
+.lightbulb.on .lightbulb-glass {
+    background-color: #f1ec40; /* Yellowish light color for the glass when on */
+    box-shadow: 0px 0px 10px 5px #f1ec40; /* Glow effect */
+}

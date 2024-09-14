@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightbulb Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+      window.config = {
+        API_URL: 'http://localhost:3000/lightbulbs',
+        WEBSOCKET_URL: 'ws://localhost:8081'  // WebSocket server URL
+      };
+    </script>
+</head>
+<body>
+    <h1>Lightbulb Dashboard</h1>
+    <div id="lightbulbs-container"></div>
+
+    <!-- Add the script tag here to include app.js -->
+    <script src="app.js"></script>
+</body>
+</html>

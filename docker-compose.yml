@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: lightbulbs
+      API_PORT: 3000
+      API_SCHEMA: http
+      API_DOMAIN: api
+    volumes:
+      - ./api:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm start
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: lightbulbs
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./api/db:/docker-entrypoint-initdb.d
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "8080:8080"   # Frontend on port 8080
+    depends_on:
+      - api
+
+  websocket:
+    build:
+      context: ./websocket
+    ports:
+      - "8081:8081"   # WebSocket server on port 8081
+    depends_on:
+      - api
+    command: node wsServer.js
