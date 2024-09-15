@@ -1,0 +1,213 @@
+{
+	"info": {
+		"_postman_id": "19dd2b69-f0e6-466a-8974-cafa61301b42",
+		"name": "TDAY",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27428876"
+	},
+	"item": [
+		{
+			"name": "Not secured",
+			"item": [
+				{
+					"name": "Create lightbulb",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"bulb-name\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{origin}}/lightbulbs",
+							"host": [
+								"{{origin}}"
+							],
+							"path": [
+								"lightbulbs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get lightbulb",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1SQzEyQjl0U2JPbUtMeldNcXo1TyJ9.eyJyb2xlIjpbXSwiaXNzIjoiaHR0cHM6Ly9kZXYtN2N6azR3cDQ2YzV3ZGM2Yi51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjZlNjdjMzc0OTIwMjI0NjY0MmRiZWVlIiwiYXVkIjoiaHR0cHM6Ly9rb25nLnBvcnRhc2VjdXJhLmNvbTo4NDQzIiwiaWF0IjoxNzI2MzgxMTE2LCJleHAiOjE3MjY0Njc1MTYsImF6cCI6IkI3bjhvNksxTUlLelgyQXJOTkVGdXdKUmtZR1ZnS0FvIn0.KRxHO00RAvfLQg4YkvB0iMFLp8-1ODmTmiYQscuaQZI0aBskUPRCF1VWI5CCABk4bZtcy4cTk-jB2tAQJhTKs4NtMnxTOqeiAEXc7Pgaqk1sVnnHtcZfu-mWktCl4ZRfO1kz9dupEhPFzgZw5h6MwdjQc5nq6CJAM8YJXKyjcHGl4HH-YoA0jh1wJaKG12YTLsKcD54Rbl5OqbdVTJs4alhAnE0J_LJCtVYxn2vTEOBpc6TMV_ptk4f6yDp0TtevaDO7gqNZmtBBMllrR_UB1dTg58xKYUGjfgfK11Cx4KagGScOiuaQjAXp2y7z8TjIc4jZAnaU9SQIrHfDHBE6gw",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{origin}}/lightbulbs",
+							"host": [
+								"{{origin}}"
+							],
+							"path": [
+								"lightbulbs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change lightbulb status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"on\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{origin}}/lightbulbs/2",
+							"host": [
+								"{{origin}}"
+							],
+							"path": [
+								"lightbulbs",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete lightbulb",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{origin}}/lightbulbs/3",
+							"host": [
+								"{{origin}}"
+							],
+							"path": [
+								"lightbulbs",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Helper",
+			"item": [
+				{
+					"name": "Authenticate",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "authRequestParams",
+									"value": [
+										{
+											"key": "audience",
+											"value": "https://kong.portasecura.com:8443",
+											"enabled": true,
+											"send_as": "request_url"
+										}
+									],
+									"type": "any"
+								},
+								{
+									"key": "scope",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "KZmRf1awuJzyo2ehFBEZ0t6FFMROoxfCxp0ZfnvI1X36aD-8JWUDF9uzphS67C-b",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "B7n8o6K1MIKzX2ArNNEFuwJRkYGVgKAo",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://dev-7czk4wp46c5wdc6b.us.auth0.com/oauth/token",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://dev-7czk4wp46c5wdc6b.us.auth0.com/authorize",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "lightbulb",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
