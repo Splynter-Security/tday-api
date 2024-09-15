@@ -71,15 +71,32 @@ exports.updateLightbulb = async (req, res) => {
   }
 
   try {
-    const updated = await updateLightbulbById(id, statusBoolean, owner);
-    if (!updated) {
-      return res.status(404).json({ error: `Lightbulb with ID ${id} not found or you do not have permission.` });
+    const lightbulb = await getLightbulbById(id);
+
+    // If the lightbulb doesn't exist, return 404
+    if (!lightbulb) {
+      return res.status(404).json({ error: `Lightbulb with ID ${id} does not exist.` });
     }
+
+    // If the lightbulb has an owner, and the owner does not match the current user, return 403
+    if (lightbulb.owner && lightbulb.owner !== owner) {
+      return res.status(403).json({ error: 'You are not authorized to update this lightbulb.' });
+    }
+
+    const updated = await updateLightbulbById(id, statusBoolean, owner);
+    
+    // If the update didn't happen (due to owner mismatch), handle it
+    if (!updated) {
+      return res.status(404).json({ error: `Lightbulb with ID ${id} does not exist or you are not authorized.` });
+    }
+
     return res.status(200).json({ message: `Lightbulb with ID ${id} updated successfully.` });
   } catch (error) {
-    return res.status(403).json({ error: 'You are not authorized to update this lightbulb.' });
+    return res.status(500).json({ error: 'An error occurred while updating the lightbulb.' });
   }
 };
+
+
 
 // DELETE: Delete a lightbulb by ID
 exports.deleteLightbulb = async (req, res) => {
@@ -91,15 +108,32 @@ exports.deleteLightbulb = async (req, res) => {
   }
 
   try {
-    const deleted = await deleteLightbulbById(id, owner);
-    if (!deleted) {
-      return res.status(404).json({ error: `Lightbulb with ID ${id} not found or you do not have permission.` });
+    const lightbulb = await getLightbulbById(id);
+
+    if (!lightbulb) {
+      return res.status(404).json({ error: `Lightbulb with ID ${id} does not exist.` });
     }
+
+    // Check if the user is authorized to delete the lightbulb
+    if (lightbulb.owner && lightbulb.owner !== owner) {
+      return res.status(403).json({ error: 'You are not authorized to delete this lightbulb.' });
+    }
+
+    const deleted = await deleteLightbulbById(id, owner);
+    
+    // If deleteLightbulbById returned null, handle the lightbulb not found or unauthorized case
+    if (!deleted) {
+      return res.status(404).json({ error: `Lightbulb with ID ${id} does not exist or you are not authorized.` });
+    }
+
     return res.status(200).json({ message: `Lightbulb with ID ${id} deleted successfully.` });
   } catch (error) {
-    return res.status(403).json({ error: 'You are not authorized to delete this lightbulb.' });
+    return res.status(500).json({ error: 'An error occurred while deleting the lightbulb.' });
   }
 };
+
+
+
 
 // DELETE: Delete all lightbulbs
 exports.deleteAllLightbulbs = async (req, res) => {

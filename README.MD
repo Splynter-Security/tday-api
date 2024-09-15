@@ -36,6 +36,8 @@ Two additional endpoints are available, one for basic auth and one for JWT auth:
 - lightbulbs-apikey
 - lightbulbs-jwt
 
+For example, instead of calling https://api.portasecura.com/lightbulbs you should now call https://api.portasecura.com/lightbulbs-apikey
+
 ## Credentials
 - non-secure version: no credentials needed
 - API key: aXvETfcWu3iWKicHYnCNviEuokQaMrWn

@@ -20,9 +20,12 @@ exports.createLightbulb = async (name, owner) => {
 // Get a lightbulb by ID
 exports.getLightbulbById = async (id) => {
   const result = await pool.query('SELECT * FROM lightbulbs WHERE id = $1', [id]);
+  
+  // Return null if no rows are found (lightbulb doesn't exist)
   if (result.rows.length === 0) {
-    throw new Error(`Lightbulb with ID '${id}' not found.`);
+    return null;
   }
+  
   return result.rows[0];
 };
 
@@ -34,12 +37,15 @@ exports.updateLightbulbById = async (id, status, owner) => {
     WHERE id = $2 
     AND (owner = $3 OR owner IS NULL) 
     RETURNING *`;
-  const values = [status, id, owner || null];  // If no owner, allow updates to bulbs with no owner
+  const values = [status, id, owner || null];  // Allow update if the owner is null (no owner)
 
   const result = await pool.query(query, values);
+  
+  // If no rows were affected, return null to indicate the lightbulb wasn't found or the user isn't authorized
   if (result.rows.length === 0) {
-    throw new Error(`Lightbulb with ID '${id}' not found or you do not have permission.`);
+    return null;
   }
+  
   return result.rows[0];
 };
 
@@ -49,9 +55,12 @@ exports.deleteLightbulbById = async (id, owner) => {
     'DELETE FROM lightbulbs WHERE id = $1 AND (owner = $2 OR owner IS NULL) RETURNING *', 
     [id, owner || null]
   );
+  
+  // If no rows were affected, return null to indicate the lightbulb wasn't found or the user isn't authorized
   if (result.rows.length === 0) {
-    throw new Error(`Lightbulb with ID '${id}' not found or you do not have permission.`);
+    return null;
   }
+  
   return result.rows[0];
 };
 
