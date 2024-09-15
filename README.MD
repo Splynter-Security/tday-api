@@ -22,31 +22,27 @@ curl -i -X POST https://kong.portasecura.com:8444/jwtconsumer/jwt \
   -F "rsa_public_key=@./pubkey.pem" \
   -F "key=https://dev-7czk4wp46c5wdc6b.auth0.com/" # the `iss` field
 ```
-
-# Lightbulb API Documentation
-## Get up and running
+## Start API
+Only place to change URLs is in frontend/index.html
 docker-compose up --build
 
-## Change urls
-Only place to change URLs is in frontend/index.html
-
+# Lightbulb Exercise documentation
 ## API Overview
-### Create new bulb
-curl -X POST -H "Content-Type: application/json" -d '{"name": "bulb-name"}' http://localhost:3000/lightbulbs
+Copy paste lightbulb-openapi.json in https://editor.swagger.io/
+This Openapi file shows the documentation for the non-secured API. 
 
-### Get all bulbs
-curl http://localhost:3000/lightbulbs
+Two additional endpoints are available, one for basic auth and one for JWT auth:
+- lightbulbs-basic
+- lightbulbs-apikey
+- lightbulbs-jwt
 
-### Get a single bulb
-curl http://localhost:3000/lightbulbs/{name}
+## Credentials
+- non-secure version: no credentials needed
+- API key: aXvETfcWu3iWKicHYnCNviEuokQaMrWn
+- basic auth: student:student
+- JWT auth: use the Postman collection, a request has been prepared using which you can get a token (you are free to register with any email address, there is no mail verification check)
 
-### Turn on/off bulb
-curl -X PUT -H "Content-Type: application/json" -d '{"name": "bulb-name", "status": "on"}' http://localhost:3000/lightbulbs
-
-### Delete bulb
-curl -X DELETE -H "Content-Type: application/json" -d '{"name": "bulb-name"}' http://localhost:3000/lightbulbs
-
-### Delete all bulbs (meant for admin only)
-curl -X DELETE http://localhost:3000/lightbulbs/delete-all
+## Endpoints:
+- API: https://api.portasecura.com
 
 ## Exercise 

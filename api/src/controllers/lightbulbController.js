@@ -23,7 +23,6 @@ exports.createLightbulb = async (req, res) => {
 
 // GET: Get the status of a lightbulb by ID, or all lightbulbs if no ID is provided
 exports.getLightbulb = async (req, res) => {
-  console.log('Request Headers:', req.headers);
   const { id } = req.params;
 
   if (!id) {

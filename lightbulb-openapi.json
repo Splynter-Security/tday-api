@@ -4,8 +4,8 @@ info:
   description: API to manage virtual lightbulbs. Allows creation, retrieval, updating, and deletion of lightbulbs.
   version: 1.0.0
 servers:
-  - url: http://localhost:3000
-    description: Local server
+  - url: https://api.portasecura.com
+    description: TDAY Lightbulb API
 
 paths:
   /lightbulbs:
