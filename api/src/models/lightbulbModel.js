@@ -8,51 +8,60 @@ const pool = new Pool({
   database: process.env.DB_NAME,
 });
 
-// Create a new lightbulb
-exports.createLightbulb = async (name) => {
-  const result = await pool.query('INSERT INTO lightbulbs (name) VALUES ($1) RETURNING *', [name]);
+// Create a new lightbulb (owner can be null)
+exports.createLightbulb = async (name, owner) => {
+  const result = await pool.query(
+    'INSERT INTO lightbulbs (name, owner) VALUES ($1, $2) RETURNING *',
+    [name, owner || null]  // Use null if owner is not provided
+  );
   return result.rows[0];
 };
 
-// Get a lightbulb by name
-exports.getLightbulbByName = async (name) => {
-  const result = await pool.query('SELECT * FROM lightbulbs WHERE name = $1', [name]);
+// Get a lightbulb by ID
+exports.getLightbulbById = async (id) => {
+  const result = await pool.query('SELECT * FROM lightbulbs WHERE id = $1', [id]);
   if (result.rows.length === 0) {
-    throw new Error(`Lightbulb '${name}' not found.`);
+    throw new Error(`Lightbulb with ID '${id}' not found.`);
   }
   return result.rows[0];
 };
 
-// Update lightbulb status
-exports.updateLightbulbStatus = async (name, status) => {
-  const query = 'UPDATE lightbulbs SET status = $1 WHERE name = $2';
-  const values = [status, name];
+// Update lightbulb status by ID (Check owner)
+exports.updateLightbulbById = async (id, status, owner) => {
+  const query = `
+    UPDATE lightbulbs 
+    SET status = $1 
+    WHERE id = $2 
+    AND (owner = $3 OR owner IS NULL) 
+    RETURNING *`;
+  const values = [status, id, owner || null];  // If no owner, allow updates to bulbs with no owner
 
-  await pool.query(query, values);
-};
-
-// Delete a lightbulb
-exports.deleteLightbulb = async (name) => {
-  const result = await pool.query('DELETE FROM lightbulbs WHERE name = $1 RETURNING *', [name]);
+  const result = await pool.query(query, values);
   if (result.rows.length === 0) {
-    throw new Error(`Lightbulb '${name}' not found.`);
+    throw new Error(`Lightbulb with ID '${id}' not found or you do not have permission.`);
   }
   return result.rows[0];
 };
 
-// Delete all lightbulbs
+// Delete a lightbulb by ID (Check owner)
+exports.deleteLightbulbById = async (id, owner) => {
+  const result = await pool.query(
+    'DELETE FROM lightbulbs WHERE id = $1 AND (owner = $2 OR owner IS NULL) RETURNING *', 
+    [id, owner || null]
+  );
+  if (result.rows.length === 0) {
+    throw new Error(`Lightbulb with ID '${id}' not found or you do not have permission.`);
+  }
+  return result.rows[0];
+};
+
+// Get all lightbulbs
+exports.getAllLightbulbs = async () => {
+  const result = await pool.query('SELECT * FROM lightbulbs');
+  return result.rows;
+};
+
+// Delete all lightbulbs (no ownership check)
 exports.deleteAllLightbulbs = async () => {
   await pool.query('DELETE FROM lightbulbs');
-};
-
-// Function to fetch all lightbulbs from the database
-exports.getAllLightbulbs = async () => {
-  try {
-    const query = 'SELECT * FROM lightbulbs';  // Make sure the table name is correct
-    const result = await pool.query(query);
-    return result.rows;
-  } catch (error) {
-    console.error('Error executing query in getAllLightbulbsFromDB:', error);  // Log database query errors
-    throw error;
-  }
 };

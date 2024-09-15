@@ -1,0 +1,136 @@
+openapi: 3.0.0
+info:
+  title: Lightbulb API
+  description: API to manage virtual lightbulbs. Allows creation, retrieval, updating, and deletion of lightbulbs.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local server
+
+paths:
+  /lightbulbs:
+    post:
+      summary: Create a new lightbulb
+      description: Creates a new lightbulb with a specified name.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the new lightbulb.
+              required:
+                - name
+      responses:
+        '201':
+          description: Lightbulb created successfully.
+        '400':
+          description: Name is required to create a lightbulb.
+        '500':
+          description: Server error.
+
+  /lightbulbs/{id}:
+    get:
+      summary: Get a specific lightbulb by ID (or all bulbs when no ID specified))
+      description: Retrieves the status of a specific lightbulb by its ID.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: The ID of the lightbulb.
+      responses:
+        '200':
+          description: Lightbulb retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The lightbulb's ID.
+                  name:
+                    type: string
+                    description: The name of the lightbulb.
+                  status:
+                    type: string
+                    enum: [on, off]
+                    description: The current status of the lightbulb.
+        '404':
+          description: Lightbulb not found.
+        '500':
+          description: Error occurred while fetching the lightbulb.
+
+    put:
+      summary: Update the status of a lightbulb
+      description: Updates the status (on/off) of a specific lightbulb by its ID.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: The ID of the lightbulb.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [on, off]
+                  description: The new status of the lightbulb.
+              required:
+                - status
+      responses:
+        '200':
+          description: Lightbulb status updated successfully.
+        '400':
+          description: Invalid status provided.
+        '404':
+          description: Lightbulb not found.
+        '500':
+          description: Error occurred while updating the lightbulb.
+
+    delete:
+      summary: Delete a specific lightbulb by ID
+      description: Deletes a lightbulb by its ID.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: The ID of the lightbulb to delete.
+      responses:
+        '200':
+          description: Lightbulb deleted successfully.
+        '400':
+          description: ID is required to delete a lightbulb.
+        '404':
+          description: Lightbulb not found.
+        '500':
+          description: Error occurred while deleting the lightbulb.
+
+components:
+  schemas:
+    Lightbulb:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the lightbulb.
+        name:
+          type: string
+          description: The name of the lightbulb.
+        status:
+          type: string
+          enum: [on, off]
+          description: The current status of the lightbulb.

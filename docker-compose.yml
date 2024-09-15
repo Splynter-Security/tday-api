@@ -30,7 +30,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./api/db:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data   # For persistent data
+      - ./api/db:/docker-entrypoint-initdb.d     # For initialization scripts
 
   frontend:
     build:
@@ -48,3 +49,6 @@ services:
     depends_on:
       - api
     command: node wsServer.js
+
+volumes:
+  postgres_data:  # Named volume for persistent PostgreSQL data

@@ -1,29 +1,67 @@
-const { getLightbulbByName, createLightbulb, updateLightbulbStatus, deleteLightbulb, deleteAllLightbulbs, getAllLightbulbs } = require('../models/lightbulbModel');
+const { getLightbulbById, createLightbulb, updateLightbulbById, deleteLightbulbById, getAllLightbulbs, deleteAllLightbulbs } = require('../models/lightbulbModel');
 
 // POST: Create a new lightbulb
 exports.createLightbulb = async (req, res) => {
   const { name } = req.body;
+  const owner = req.headers['x-user-sub'] || null;  // Fetch owner from headers, or null if not provided
+
   if (!name) {
     return res.status(400).json({ error: 'Name is required to create a lightbulb.' });
   }
+
   try {
-    await createLightbulb(name);
-    res.status(201).json({ message: `Lightbulb '${name}' created successfully.` });
+    const createdLightbulb = await createLightbulb(name, owner);
+    res.status(201).json({
+      message: `Lightbulb '${name}' created successfully.`,
+      id: createdLightbulb.id  // Return the created lightbulb's ID
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
-// PUT: Update lightbulb status (on/off)
-exports.updateLightbulb = async (req, res) => {
-  const { name, status } = req.body;
 
-  // Validate input
-  if (!name || !status) {
-    return res.status(400).json({ error: 'Name and status ("on" or "off") are required to update the lightbulb.' });
+// GET: Get the status of a lightbulb by ID, or all lightbulbs if no ID is provided
+exports.getLightbulb = async (req, res) => {
+  console.log('Request Headers:', req.headers);
+  const { id } = req.params;
+
+  if (!id) {
+    // No ID provided, return all lightbulbs
+    try {
+      const lightbulbs = await getAllLightbulbs();
+      const lightbulbsWithStatus = lightbulbs.map(bulb => ({
+        ...bulb,
+        status: bulb.status === true ? 'on' : bulb.status === false ? 'off' : 'unknown'
+      }));
+      return res.status(200).json(lightbulbsWithStatus);
+    } catch (error) {
+      return res.status(500).json({ error: 'An error occurred while fetching lightbulbs.' });
+    }
   }
 
-  // Convert "on"/"off" to boolean true/false
+  // Fetch lightbulb by ID
+  try {
+    const bulb = await getLightbulbById(id);
+    if (!bulb) {
+      return res.status(404).json({ error: 'Lightbulb not found.' });
+    }
+    return res.status(200).json({ id: bulb.id, name: bulb.name, status: bulb.status ? 'on' : 'off', owner: bulb.owner });
+  } catch (error) {
+    return res.status(500).json({ error: 'An error occurred while fetching the lightbulb.' });
+  }
+};
+
+// PUT: Update lightbulb status by ID
+exports.updateLightbulb = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  const owner = req.headers['x-user-sub'] || null;  // Fetch owner from headers, or null if not provided
+
+  if (!id || !status) {
+    return res.status(400).json({ error: 'ID and status ("on" or "off") are required to update the lightbulb.' });
+  }
+
   let statusBoolean;
   if (status === 'on') {
     statusBoolean = true;
@@ -34,79 +72,42 @@ exports.updateLightbulb = async (req, res) => {
   }
 
   try {
-    // Log the request data
-    console.log(`Updating lightbulb '${name}' to status: ${statusBoolean}`);
-
-    // Update the lightbulb status in the database
-    await updateLightbulbStatus(name, statusBoolean);
-
-    res.status(200).json({ message: 'Lightbulb status updated successfully.' });
+    const updated = await updateLightbulbById(id, statusBoolean, owner);
+    if (!updated) {
+      return res.status(404).json({ error: `Lightbulb with ID ${id} not found or you do not have permission.` });
+    }
+    return res.status(200).json({ message: `Lightbulb with ID ${id} updated successfully.` });
   } catch (error) {
-    // Log the actual error
-    console.error('Error while updating lightbulb:', error);
-    res.status(500).json({ error: 'An error occurred while updating the lightbulb status.' });
+    return res.status(403).json({ error: 'You are not authorized to update this lightbulb.' });
   }
 };
 
-// GET: Get the status of a lightbulb
-exports.getLightbulb = async (req, res) => {
-  const { name } = req.params;
-  if (!name) {
-    return res.status(400).json({ error: 'Name is required to get the status of the lightbulb.' });
-  }
-  try {
-    const bulb = await getLightbulbByName(name);
-    res.status(200).json({ name: bulb.name, status: bulb.status ? 'on' : 'off' });
-  } catch (error) {
-    res.status(404).json({ error: error.message });
-  }
-};
-
-// DELETE: Delete a lightbulb
+// DELETE: Delete a lightbulb by ID
 exports.deleteLightbulb = async (req, res) => {
-  const { name } = req.body;
-  if (!name) {
-    return res.status(400).json({ error: 'Name is required to delete a lightbulb.' });
+  const { id } = req.params;
+  const owner = req.headers['x-user-sub'] || null;  // Fetch owner from headers, or null if not provided
+
+  if (!id) {
+    return res.status(400).json({ error: 'ID is required to delete a lightbulb.' });
   }
+
   try {
-    await deleteLightbulb(name);
-    res.status(200).json({ message: `Lightbulb '${name}' deleted successfully.` });
+    const deleted = await deleteLightbulbById(id, owner);
+    if (!deleted) {
+      return res.status(404).json({ error: `Lightbulb with ID ${id} not found or you do not have permission.` });
+    }
+    return res.status(200).json({ message: `Lightbulb with ID ${id} deleted successfully.` });
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    return res.status(403).json({ error: 'You are not authorized to delete this lightbulb.' });
   }
 };
 
 // DELETE: Delete all lightbulbs
 exports.deleteAllLightbulbs = async (req, res) => {
-    try {
-      await deleteAllLightbulbs();
-      res.status(200).json({ message: 'All lightbulbs deleted successfully.' });
-    } catch (error) {
-      res.status(500).json({ error: 'An error occurred while deleting all lightbulbs.' });
-    }
-  };
-
-  // Controller for fetching all lightbulbs
-exports.getAllLightbulbs = async (req, res) => {
   try {
-    const lightbulbs = await getAllLightbulbs();
-    
-    // Log lightbulbs before conversion
-    console.log('Fetched lightbulbs from DB:', lightbulbs);
-    
-    // Map the result to convert boolean status to 'on'/'off'
-    const lightbulbsWithStatus = lightbulbs.map(bulb => ({
-      ...bulb,
-      // Convert boolean status to 'on'/'off', and handle null or undefined values
-      status: bulb.status === true ? 'on' : bulb.status === false ? 'off' : 'unknown'
-    }));
-    
-    // Log the transformed lightbulbs
-    console.log('Transformed lightbulbs:', lightbulbsWithStatus);
-
-    res.status(200).json(lightbulbsWithStatus);  // Send the modified response
+    await deleteAllLightbulbs();
+    res.status(200).json({ message: 'All lightbulbs deleted successfully.' });
   } catch (error) {
-    console.error('Error in getAllLightbulbs:', error);
-    res.status(500).json({ error: 'An error occurred while fetching lightbulbs.' });
+    res.status(500).json({ error: 'An error occurred while deleting all lightbulbs.' });
   }
 };
