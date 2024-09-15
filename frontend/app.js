@@ -15,7 +15,7 @@ function createLightbulbElement(id, name, status) {
         <div class="lightbulb-base"></div>
         <div class="lightbulb-glass"></div>
         <div class="lightbulb-glow"></div>
-        <p>${name}</p>
+        <p>${id}: ${name}</p>   <!-- Display ID and name in a compact form -->
     `;
 
     // Add the 'on' class if the lightbulb status is "on"

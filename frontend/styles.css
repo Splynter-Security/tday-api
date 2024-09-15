@@ -10,28 +10,29 @@ body {
 #lightbulbs-container {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 15px; /* Reduce gap to make it more compact */
     flex-wrap: wrap;
 }
 
 .lightbulb {
     display: inline-block;
     text-align: center;
-    margin: 10px;
+    margin: 5px; /* Reduce margin for compact layout */
     position: relative;
-    width: 80px;
+    width: 70px;  /* Adjust width for compact display */
 }
 
 .lightbulb p {
-    margin-top: 10px;
-    font-size: 18px;
+    margin-top: 3px;  /* Less space between the lightbulb and text */
+    font-size: 14px;  /* Smaller font for compact look */
+    line-height: 1.2; /* Compact line spacing */
     color: #cad2d5; /* Grey color for text */
 }
 
 /* Base part of the lightbulb */
 .lightbulb-base {
-    width: 30px;
-    height: 20px;
+    width: 25px; /* Reduced size for a more compact look */
+    height: 15px;
     background-color: #cad2d5; /* Grey color for the base */
     margin: 0 auto;
     border-radius: 5px;
@@ -39,8 +40,8 @@ body {
 
 /* Glass part of the lightbulb */
 .lightbulb-glass {
-    width: 60px;
-    height: 80px;
+    width: 50px; /* Reduced size for compact layout */
+    height: 70px;
     background-color: #cad2d5; /* Grey color for the glass when off */
     margin: 0 auto;
     border-radius: 50% 50% 45% 45%;
@@ -52,8 +53,8 @@ body {
 
 /* Glow effect when the bulb is on */
 .lightbulb-glow {
-    width: 60px;
-    height: 80px;
+    width: 50px; /* Adjust size to match glass */
+    height: 70px;
     background-color: #f1ec40; /* Yellowish light color when on */
     border-radius: 50% 50% 45% 45%;
     position: absolute;

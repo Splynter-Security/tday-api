@@ -134,3 +134,6 @@ components:
           type: string
           enum: [on, off]
           description: The current status of the lightbulb.
+        owner:
+          type: string
+          description: The owner of the lightbulb (optional).

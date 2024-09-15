@@ -46,5 +46,20 @@ For example, instead of calling https://api.portasecura.com/lightbulbs you shoul
 
 ## Endpoints:
 - API: https://api.portasecura.com
+- Dashboard (admin-only): https://apidashboard.portasecura.com
 
-## Exercise 
+# Exercises
+## Exercise 1
+- Copy paste lightbulb-openapi.json in https://editor.swagger.io/
+- Create a lightbulb with your name
+- Turn on the lightbulb
+
+## Exercise 2
+Same exercise as exercise 1, but now use the lightbulbs-apikey path. 
+
+## Exercise 3
+Same exercise as exercise 1, but now use the lightbulbs-basic path. Working credentials are 'student:student'. 
+Can you delete lightbulbs created as a student via the non-secured lightbulbs API?
+
+## Exercise 4
+Same exercise as exercise 1, but now use the lightbulbs-jwt path. This api is secured using JWT tokens that are issued by Auth0. To help you get a token, use the "Authenticate" request that is available in the Helper folder of the Postman collection. You can simply hit 'Get new acess token' to get one!
