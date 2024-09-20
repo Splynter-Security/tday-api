@@ -5,7 +5,7 @@ const container = document.getElementById('lightbulbs-container');
 console.log("app.js is loaded and running!");
 
 // Function to create a lightbulb element
-function createLightbulbElement(id, name, status) {
+function createLightbulbElement(id, name, status, owner) {
     const lightbulb = document.createElement('div');
     lightbulb.classList.add('lightbulb');
     lightbulb.id = id;  // Use the lightbulb's id as the unique identifier
@@ -23,9 +23,28 @@ function createLightbulbElement(id, name, status) {
         lightbulb.classList.add('on');
     }
 
+    // Check the owner field and apply appropriate class and shape
+    if (owner) {
+        const securityShape = document.createElement('div');
+        securityShape.classList.add('security-shape');
+
+        if (owner === 'apikey') {
+            lightbulb.classList.add('security-apikey');  // Add class for API key owner
+        } else {
+            lightbulb.classList.add('security-personal');  // Add class for personal owner
+        }
+
+        // Append security shape to the lightbulb
+        lightbulb.querySelector('.lightbulb-glass').appendChild(securityShape);
+    }
+
     // Append the lightbulb to the container
     container.appendChild(lightbulb);
 }
+
+
+
+
 
 // Function to remove a lightbulb element
 function removeLightbulbElement(id) {
@@ -76,7 +95,7 @@ function syncLightbulbs(lightbulbs) {
         } else {
             // Create a new bulb
             console.log(`Adding new bulb: ${bulb.name} (${bulb.id})`);
-            createLightbulbElement(bulb.id, bulb.name, bulb.status);
+            createLightbulbElement(bulb.id, bulb.name, bulb.status, bulb.owner);
         }
     });
 }

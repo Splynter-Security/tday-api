@@ -49,6 +49,9 @@ body {
     top: -10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Glow effect when the bulb is on */
@@ -75,4 +78,36 @@ body {
 .lightbulb.on .lightbulb-glass {
     background-color: #f1ec40; /* Yellowish light color for the glass when on */
     box-shadow: 0px 0px 10px 5px #f1ec40; /* Glow effect */
+}
+
+/* ------------------ Circular Security Shape with Lock Icon ------------------ */
+
+/* Shared styles for the circular shape */
+.lightbulb .security-shape {
+    position: absolute;
+    bottom: -10px;
+    right: -10px; /* Change from left to right */
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Lock icon inside the circle */
+.lightbulb .security-shape::before {
+    content: "🔒"; /* Lock icon */
+    font-size: 14px;
+    color: white;
+}
+
+/* Orange circle for API key */
+.lightbulb.security-apikey .security-shape {
+    background-color: rgba(145, 104, 29, 0.701);
+}
+
+/* Green circle for personal security */
+.lightbulb.security-personal .security-shape {
+    background-color: #028289c0;
 }
