@@ -40,7 +40,7 @@ Two additional endpoints are available, one for basic auth and one for JWT auth:
 - lightbulbs-apikey
 - lightbulbs-jwt
 
-For example, instead of calling https://api.portasecura.com/lightbulbs you should now call https://api.portasecura.com/lightbulbs-apikey
+For example, instead of calling https://api.portasecura.com:4443/lightbulbs you should now call https://api.portasecura.com/lightbulbs-apikey
 
 ### Credentials
 - non-secure version: no credentials needed
@@ -49,6 +49,6 @@ For example, instead of calling https://api.portasecura.com/lightbulbs you shoul
 - JWT auth: use the Postman collection, a request has been prepared using which you can get a token (you are free to register with any email address, there is no mail verification check)
 
 ### Endpoints:
-- API: https://api.portasecura.com
+- API: https://api.portasecura.com:4443
 - Dashboard (for admin use only): https://apidashboard.portasecura.com
 
